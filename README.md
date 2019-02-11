@@ -12,9 +12,9 @@ As noted above, this wrapper is created for a speicifc use case!
 
 ### Building
 A simple `Makefile` is created to build the lua library using [luarocks](https://luarocks.org/).
-Doing `luarocks make` would build and copy shared library and lua files to correct destinations.
+Doing `luarocks make` would build and copy shared library and lua files to correct destinations, you should have build essentials e.g. g++ with c++11 support, also jwt-cpp itself depends on libcrypto (openssl).
 
 ### Installation
 The easiest way to use this library is to install via [luarocks](https://luarocks.org/)
 
-`luarocks install --server abom/cppjwt`
+`luarocks install cppjwt`
