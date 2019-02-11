@@ -26,7 +26,7 @@ Only decoding and verification are implemented for now, you can simply do:
 ```lua
 jwt.decode_raw(token) -- returns a string
 jwt.decode(token) -- returns a json object
-jwt.verify(token, key) -- return boolean
+jwt.verify(token, key) -- returns a boolean
 ````
 
 
