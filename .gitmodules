@@ -1,0 +1,6 @@
+[submodule "include/jwt-cpp"]
+	path = include/jwt-cpp
+	url = git@github.com:Thalhammer/jwt-cpp.git
+[submodule "vendor/jwt-cpp"]
+	path = vendor/jwt-cpp
+	url = git@github.com:Thalhammer/jwt-cpp.git
