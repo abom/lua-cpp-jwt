@@ -1,7 +1,7 @@
 package = "cppjwt"
    version = "0.0-1"
    source = {
-      url = "https://github.com/abom/lua-cpp-jwt"
+      url = "git://github.com/abom/lua-cpp-jwt.git"
    }
    build = {
       type = "make",
