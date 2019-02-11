@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# rock source
+*.src.rock
