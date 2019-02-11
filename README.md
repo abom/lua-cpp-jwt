@@ -18,3 +18,33 @@ Doing `luarocks make` would build and copy shared library and lua files to corre
 The easiest way to use this library is to install via [luarocks](https://luarocks.org/)
 
 `luarocks install cppjwt`
+
+### Usage
+
+Only decoding and verification are implemented for now, you can simply do:
+
+```lua
+jwt.decode_raw(token) -- returns a string
+jwt.decode(token) -- returns a json object
+jwt.verify(token, key) -- return boolean
+````
+
+
+```lua
+local jwt = require('cpp.jwt')
+
+local token = 'jwt_token_here'
+local pubkey = [[public_key_here]]
+-- decode_raw returns a json string
+print(jwt.decode_raw(token))
+-- decode returns a json object
+local header = jwt.decode(token).header
+print(header.alg)
+
+if jwt.verify(token, pubkey) then
+    print('verified')
+else
+    ...
+end
+```
+
