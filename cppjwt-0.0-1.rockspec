@@ -13,6 +13,11 @@ version = "0.0-1"
 source = {
    url = "git://github.com/abom/lua-cpp-jwt.git"
 }
+
+dependencies = {
+   "lua-cjson"
+}
+
 build = {
    type = "make",
    build_variables = {
