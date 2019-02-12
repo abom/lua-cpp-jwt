@@ -33,3 +33,6 @@
 
 # rock source
 *.src.rock
+
+# vscode
+.vscode
