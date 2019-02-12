@@ -6,7 +6,6 @@
 #include <jwt-cpp/jwt.h>
 #include <jwt-cpp/picojson.h>
 
-
 class unsupported_algorithm : std::exception {
     public:
         unsupported_algorithm(const char* alg_name) : algorithm_name("") {
@@ -22,15 +21,10 @@ class unsupported_algorithm : std::exception {
         std::string algorithm_name;
 };
 
+typedef jwt::verifier<jwt::default_clock> Verifier;
 
 template<typename... AlgArgs>
-jwt::algorithm::hmacsha get_hs_alg_by_name(const std::string&, AlgArgs...);
-template<typename... AlgArgs>
-jwt::algorithm::rsa get_rs_alg_by_name(const std::string&, AlgArgs...);
-template<typename... AlgArgs>
-jwt::algorithm::rsa get_rs_alg_by_name(const std::string&, AlgArgs...);
-template<typename... AlgArgs>
-jwt::algorithm::ecdsa get_es_alg_by_name(const std::string&, AlgArgs...);
+void allow_algorithm_by_name(Verifier&, const std::string&, AlgArgs...);
 
 extern "C" {
     char* decode(const char*);

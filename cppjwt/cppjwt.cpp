@@ -1,51 +1,34 @@
 #include <cppjwt.h>
 
 template<typename... AlgArgs>
-jwt::algorithm::hmacsha get_hs_alg_by_name(const std::string& name, AlgArgs... args) {
-    if (name == "HS256")
-        return jwt::algorithm::hs256(args...);
-    if (name == "HS384")
-        return jwt::algorithm::hs384(args...);
-    if (name == "HS512")
-        return jwt::algorithm::hs512(args...);
-
-    throw unsupported_algorithm(name.c_str());
-}
-
-template<typename... AlgArgs>
-jwt::algorithm::rsa get_rs_alg_by_name(const std::string& name, AlgArgs... args) {
-    if (name == "RS256")
-        return jwt::algorithm::rs256(args...);
-    if (name == "RS384")
-        return jwt::algorithm::rs384(args...);
-    if (name == "RS512")
-        return jwt::algorithm::rs512(args...);
-
-    throw unsupported_algorithm(name.c_str());
-}
-
-template<typename... AlgArgs>
-jwt::algorithm::ecdsa get_es_alg_by_name(const std::string& name, AlgArgs... args) {
-    if (name == "ES256")
-        return jwt::algorithm::es256(args...);
-    if (name == "ES384")
-        return jwt::algorithm::es384(args...);
-    if (name == "ES512")
-        return jwt::algorithm::es512(args...);
-
-    throw unsupported_algorithm(name.c_str());
-}
-
-template<typename... AlgArgs>
-jwt::algorithm::pss get_ps_alg_by_name(const std::string& name, AlgArgs... args) {
-    if (name == "PS256")
-        return jwt::algorithm::ps256(args...);
-    if (name == "PS384")
-        return jwt::algorithm::ps384(args...);
-    if (name == "PS512")
-        return jwt::algorithm::ps512(args...);
-
-    throw unsupported_algorithm(name.c_str());
+void allow_algorithm_by_name(Verifier& verifier, const std::string& name, AlgArgs... args) {
+    if (name == "HS256") {
+        verifier.allow_algorithm(jwt::algorithm::hs256(args...));
+    } else if (name == "HS384") {
+        verifier.allow_algorithm(jwt::algorithm::hs384(args...));
+    } else if (name == "HS512") {
+        verifier.allow_algorithm(jwt::algorithm::hs512(args...));
+    } else if (name == "RS256") {
+        verifier.allow_algorithm(jwt::algorithm::rs256(args...));
+    } else if (name == "RS384") {
+        verifier.allow_algorithm(jwt::algorithm::rs384(args...));
+    } else if (name == "RS512") {
+        verifier.allow_algorithm(jwt::algorithm::rs512(args...));
+    } else if (name == "ES256") {
+        verifier.allow_algorithm(jwt::algorithm::es256(args...));
+    } else if (name == "ES384") {
+        verifier.allow_algorithm(jwt::algorithm::es384(args...));
+    } else if (name == "ES512") {
+        verifier.allow_algorithm(jwt::algorithm::es512(args...));
+    } else if (name == "PS256") {
+        verifier.allow_algorithm(jwt::algorithm::ps256(args...));
+    } else if (name == "PS384") {
+        verifier.allow_algorithm(jwt::algorithm::ps384(args...));
+    } else if (name == "PS512") {
+        verifier.allow_algorithm(jwt::algorithm::ps512(args...));
+    } else {
+        throw unsupported_algorithm(name.c_str());
+    }
 }
 
 char* decode(const char* token) {
@@ -76,20 +59,10 @@ int verify(const char* token, const char* key) {
     try {
         auto decoded_token = jwt::decode(token);
         std::string alg_name = decoded_token.get_algorithm();
-        std::string alg_type = alg_name.substr(0, 2);
 
-        // FIXME: args other than key can be passed too
-        if (alg_type == "ES") {
-            jwt::verify().allow_algorithm(get_es_alg_by_name(alg_name, key)).verify(decoded_token);
-        } else if (alg_type == "HS") {
-            jwt::verify().allow_algorithm(get_hs_alg_by_name(alg_name, key)).verify(decoded_token);
-        } else if (alg_type == "PS") {
-            jwt::verify().allow_algorithm(get_ps_alg_by_name(alg_name, key)).verify(decoded_token);
-        } else if (alg_type == "RS") {
-            jwt::verify().allow_algorithm(get_rs_alg_by_name(alg_name, key)).verify(decoded_token);
-        } else {
-            throw unsupported_algorithm(alg_name.c_str());
-        }
+        Verifier verifier = jwt::verify();
+        allow_algorithm_by_name(verifier, alg_name, key);
+        verifier.verify(decoded_token);
 
         return 0;
     } catch(const jwt::token_verification_exception&) {
@@ -102,7 +75,6 @@ int verify(const char* token, const char* key) {
         return -3;
     }
 }
-
 
 static int lua_jwt_decode(lua_State* L) {
     const char* token = luaL_checkstring(L, 1);
